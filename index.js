@@ -19,8 +19,8 @@ $(function () {
                         rawData[i].push(rawData[i][0]);
                     }
                     if (rawData[i].length === 2) {
-                        rawData[i].push(rawData[i][0]);
-                        rawData[i].push(rawData[i][1]);
+                        rawData[i].push(Math.min(rawData[i][0], rawData[i][1]));
+                        rawData[i].push(Math.max(rawData[i][0], rawData[i][1]));
                     }
                     values.push(rawData[i])
                 }
