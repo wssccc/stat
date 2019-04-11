@@ -12,9 +12,12 @@ $(function () {
 
             function splitData(rawData) {
                 var categoryData = [];
-                var values = []
+                var values = [];
+                var days = []
                 for (var i = 0; i < rawData.length; i++) {
-                    categoryData.push(rawData[i].splice(0, 1)[0]);
+                    var dateText = rawData[i].splice(0, 1)[0];
+                    days.push(new Date(dateText));
+                    categoryData.push(dateText);
                     if (rawData[i].length === 1) {
                         rawData[i].push(rawData[i][0]);
                     }
@@ -26,30 +29,49 @@ $(function () {
                 }
                 return {
                     categoryData: categoryData,
-                    values: values
+                    values: values,
+                    days: days
                 };
+            }
+
+            function daily(i) {
+                return (data0.values[i][0] + data0.values[i][1]) / 2;
             }
 
             function calculateDaily() {
                 var result = [];
                 for (var i = 0, len = data0.values.length; i < len; i++) {
-                    result.push((data0.values[i][0] + data0.values[i][1]) / 2);
+                    result.push(daily(i).toFixed(2));
                 }
                 return result;
             }
 
             function calculateMA(dayCount) {
                 var result = [];
+                var margin = (dayCount / 2).toFixed(0) * 86400 * 1000;
                 for (var i = 0, len = data0.values.length; i < len; i++) {
-                    if (i < dayCount) {
-                        result.push('-');
-                        continue;
+                    var current = data0.days[i].getTime();
+                    var left = current - margin;
+                    var right = current + margin;
+                    var cnt = 1;
+                    var sum = daily(i);
+                    for (var j = i - 1; j >= 0; --j) {
+                        if (data0.days[j].getTime() > left) {
+                            sum += daily(j);
+                            ++cnt;
+                        } else {
+                            break;
+                        }
                     }
-                    var sum = 0;
-                    for (var j = 0; j < dayCount; j++) {
-                        sum += data0.values[i - j][1];
+                    for (var j = i + 1; j < len; ++j) {
+                        if (data0.days[j].getTime() < right) {
+                            sum += daily(j);
+                            ++cnt;
+                        } else {
+                            break;
+                        }
                     }
-                    result.push(sum / dayCount);
+                    result.push((sum / cnt).toFixed(2));
                 }
                 return result;
             }
@@ -67,7 +89,7 @@ $(function () {
                     }
                 },
                 legend: {
-                    data: ['日K', '日均', "MA5"]
+                    data: ['日K', '日均', "MA5", "MA10"]
                 },
                 grid: {
                     left: '10%',
@@ -214,6 +236,15 @@ $(function () {
                         name: 'MA5',
                         type: 'line',
                         data: calculateMA(5),
+                        smooth: true,
+                        lineStyle: {
+                            normal: {opacity: 0.5}
+                        }
+                    },
+                    {
+                        name: 'MA10',
+                        type: 'line',
+                        data: calculateMA(10),
                         smooth: true,
                         lineStyle: {
                             normal: {opacity: 0.5}
