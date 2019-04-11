@@ -18,14 +18,15 @@ $(function () {
                     var dateText = rawData[i].splice(0, 1)[0];
                     days.push(new Date(dateText));
                     categoryData.push(dateText);
-                    if (rawData[i].length === 1) {
-                        rawData[i].push(rawData[i][0]);
+                    var morning = rawData[i][0];
+                    var night = rawData[i].length > 1 ? rawData[i][1] : morning;
+                    var max = Math.max(morning, night);
+                    var min = Math.min(morning, night);
+                    if (i === 0) {
+                        values.push([min, max, min, max]);
+                    } else {
+                        values.push([values[i - 1][1], min, min, max]);
                     }
-                    if (rawData[i].length === 2) {
-                        rawData[i].push(Math.min(rawData[i][0], rawData[i][1]));
-                        rawData[i].push(Math.max(rawData[i][0], rawData[i][1]));
-                    }
-                    values.push(rawData[i])
                 }
                 return {
                     categoryData: categoryData,
