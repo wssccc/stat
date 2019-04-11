@@ -57,7 +57,7 @@ $(function () {
 
             option = {
                 title: {
-                    text: 'weight',
+                    text: 'Weight',
                     left: 0
                 },
                 tooltip: {
@@ -89,7 +89,10 @@ $(function () {
                     scale: true,
                     splitArea: {
                         show: true
-                    }
+                    },
+                    axisLabel: {
+                        formatter: '{value} kg'
+                    },
                 },
                 dataZoom: [
                     {
