@@ -8,8 +8,29 @@ $(function () {
         type: "GET",
         dataType: "JSON",
         success: function (data) {
-            var data0 = splitData(data);
+            var data0 = splitData(interpolation(data));
 
+            function dateFormat(date) {
+                return date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
+            }
+
+            function interpolation(data) {
+                var intp = [];
+                for (var i = 0; i < data.length; ++i) {
+                    data[i][0] = new Date(data[i][0]);
+                    if (data[i].length === 2) {
+                        data[i].push(data[i][1]);
+                    }
+                }
+                for (var i = 0; i < data.length - 1; ++i) {
+                    var next = data[i + 1][0].getTime();
+                    var cur = data[i][0].getTime();
+                    for (var k = cur; k < next; k += 86400 * 1000) {
+                        intp.push([dateFormat(new Date(k)), data[i][1], data[i][2]]);
+                    }
+                }
+                return intp;
+            }
             function splitData(rawData) {
                 var categoryData = [];
                 var values = [];
@@ -19,7 +40,7 @@ $(function () {
                     days.push(new Date(dateText));
                     categoryData.push(dateText);
                     var morning = rawData[i][0];
-                    var night = rawData[i].length > 1 ? rawData[i][1] : morning;
+                    var night = rawData[i][1];
                     var max = Math.max(morning, night);
                     var min = Math.min(morning, night);
                     if (i === 0) {
