@@ -33,7 +33,7 @@ $(function () {
             function calculateDaily() {
                 var result = [];
                 for (var i = 0, len = data0.values.length; i < len; i++) {
-                    result.push(data0.values[i][0]);
+                    result.push((data0.values[i][0] + data0.values[i][1]) / 2);
                 }
                 return result;
             }
