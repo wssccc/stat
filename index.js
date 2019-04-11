@@ -97,14 +97,14 @@ $(function () {
                 dataZoom: [
                     {
                         type: 'inside',
-                        start: 0,
+                        start: 50,
                         end: 100
                     },
                     {
                         show: true,
                         type: 'slider',
                         y: '90%',
-                        start: 0,
+                        start: 50,
                         end: 100
                     }
                 ],
