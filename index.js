@@ -31,6 +31,7 @@ $(function () {
                 }
                 return intp;
             }
+
             function splitData(rawData) {
                 var categoryData = [];
                 var values = [];
@@ -101,7 +102,7 @@ $(function () {
 
             option = {
                 title: {
-                    text: 'Weight',
+                    text: '',
                     left: 0
                 },
                 tooltip: {
@@ -135,7 +136,7 @@ $(function () {
                         show: true
                     },
                     axisLabel: {
-                        formatter: '{value} kg'
+                        formatter: '{value}kg'
                     },
                 },
                 dataZoom: [
@@ -280,6 +281,7 @@ $(function () {
             };
             echarts.init($("#chart")[0]).setOption(option);
             //
+            return;
             $.ajax({
                 url: 'https://v1.hitokoto.cn/?charset=utf-8&c=b',
                 type: 'GET',
