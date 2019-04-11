@@ -250,6 +250,7 @@ $(function () {
                         type: 'line',
                         data: calculateDaily(),
                         smooth: true,
+                        showSymbol: false,
                         lineStyle: {
                             normal: {opacity: 0.5}
                         }
@@ -259,6 +260,7 @@ $(function () {
                         type: 'line',
                         data: calculateMA(5),
                         smooth: true,
+                        showSymbol: false,
                         lineStyle: {
                             normal: {opacity: 0.5}
                         }
@@ -268,6 +270,7 @@ $(function () {
                         type: 'line',
                         data: calculateMA(10),
                         smooth: true,
+                        showSymbol: false,
                         lineStyle: {
                             normal: {opacity: 0.5}
                         }
