@@ -29,6 +29,8 @@ $(function () {
                         intp.push([dateFormat(new Date(k)), data[i][1], data[i][2]]);
                     }
                 }
+                var last = data.length - 1;
+                intp.push([dateFormat(data[last][0]), data[last][1], data[last][2]]);
                 return intp;
             }
 
