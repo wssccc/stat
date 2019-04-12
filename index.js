@@ -53,6 +53,8 @@ $(function () {
                         values.push([open, close, lowest, highest]);
                         //do update previous close
                         values[i - 1][1] = open;
+                        values[i - 1][2] = Math.min(values[i - 1][0], values[i - 1][1], values[i - 1][2], values[i - 1][3]);
+                        values[i - 1][3] = Math.max(values[i - 1][0], values[i - 1][1], values[i - 1][2], values[i - 1][3]);
                     }
                 }
                 return {
