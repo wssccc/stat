@@ -51,7 +51,7 @@
                     values.push([open, close, lowest, highest]);
                 } else {
                     //close value will be updated
-                    values.push([open, close, lowest, highest]);
+                    values.push([open, open, lowest, highest]);
                     //do update previous close
                     values[i - 1][1] = open;
                     values[i - 1][2] = Math.min(values[i - 1][0], values[i - 1][1], values[i - 1][2], values[i - 1][3]);
