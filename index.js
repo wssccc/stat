@@ -356,7 +356,7 @@
                 }
             },
             calendar: {
-                top: 120,
+                top: 20,
                 left: 30,
                 right: 30,
                 cellSize: 17,
