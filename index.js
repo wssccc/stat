@@ -42,14 +42,17 @@ $(function () {
                     var dateText = rawData[i].splice(0, 1)[0];
                     days.push(new Date(dateText));
                     categoryData.push(dateText);
-                    var morning = rawData[i][0];
-                    var night = rawData[i][1];
-                    var max = Math.max(morning, night);
-                    var min = Math.min(morning, night);
+                    var open = rawData[i][0];
+                    var close = rawData[i][1];
+                    var highest = Math.max(open, close);
+                    var lowest = Math.min(open, close);
                     if (i === 0) {
-                        values.push([min, max, min, max]);
+                        values.push([open, close, lowest, highest]);
                     } else {
-                        values.push([values[i - 1][1], min, min, max]);
+                        //close value will be updated
+                        values.push([open, close, lowest, highest]);
+                        //do update previous close
+                        values[i - 1][1] = open;
                     }
                 }
                 return {
