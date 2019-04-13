@@ -25,7 +25,7 @@
         }
 
         $.ajax({
-            url: 'data.json',
+            url: 'data.json?_=' + Math.random(),
             type: "GET",
             dataType: "JSON",
             success: function (data) {
