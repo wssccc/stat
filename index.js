@@ -386,7 +386,7 @@
                 data: data,
                 tooltip: {
                     formatter: function (d) {
-                        return d.value[0] + '<br/>' + d.value[1] + 'kg';
+                        return d.value[0] + '<br/><span class="tip-arrow glyphicon glyphicon-arrow-' + (d.value[1] > 0 ? 'up' : 'down') + '" aria-hidden="true"></span> ' + Math.abs(d.value[1]) + 'kg';
                     },
                     textStyle: {
                         fontWeight: 'bold'
