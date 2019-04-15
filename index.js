@@ -129,9 +129,10 @@
                 data: ['日K', '日均', "MA5", "MA10"]
             },
             grid: {
-                left: '10%',
-                right: '10%',
-                bottom: '15%'
+                left: '3',
+                right: '40',
+                bottom: '10%',
+                containLabel: true
             },
             xAxis: {
                 type: 'category',
@@ -150,7 +151,8 @@
                     show: true
                 },
                 axisLabel: {
-                    formatter: '{value}kg'
+                    formatter: '{value}kg',
+                    rotate: 30
                 },
             },
             dataZoom: [
@@ -393,7 +395,7 @@
                 }
             }
         };
-        echarts.init($("#heatmap")[0]).setOption(option);
+        echarts.init($("#heat-map")[0]).setOption(option);
     }
 
     function initHitokoto() {
