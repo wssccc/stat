@@ -136,7 +136,7 @@
                 }
             },
             legend: {
-                data: ['日K', '日均', "MA5", "MA10"]
+                data: ["MA5", "MA10"]
             },
             grid: {
                 left: '3',
@@ -181,7 +181,7 @@
             ],
             series: [
                 {
-                    name: '日K',
+                    name: 'K',
                     type: 'candlestick',
                     data: data0.values_fixed,
                     itemStyle: {
@@ -273,7 +273,7 @@
                     }
                 },
                 {
-                    name: '日均',
+                    name: 'Avg',
                     type: 'line',
                     data: calculateDaily(),
                     smooth: true,
