@@ -1,25 +1,25 @@
-(function () {
+(function (echarts) {
     function load(callback) {
         function dateFormat(date) {
             return date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
         }
 
         function interpolation(data) {
-            var intp = [];
-            for (var i = 0; i < data.length; ++i) {
+            let intp = [];
+            for (let i = 0; i < data.length; ++i) {
                 data[i][0] = new Date(data[i][0]);
                 if (data[i].length === 2) {
                     data[i].push(data[i][1]);
                 }
             }
-            for (var i = 0; i < data.length - 1; ++i) {
-                var next = data[i + 1][0].getTime();
-                var cur = data[i][0].getTime();
-                for (var k = cur; k < next; k += 86400 * 1000) {
+            for (let i = 0; i < data.length - 1; ++i) {
+                let next = data[i + 1][0].getTime();
+                let cur = data[i][0].getTime();
+                for (let k = cur; k < next; k += 86400 * 1000) {
                     intp.push([dateFormat(new Date(k)), data[i][1], data[i][2]]);
                 }
             }
-            var last = data.length - 1;
+            let last = data.length - 1;
             intp.push([dateFormat(data[last][0]), data[last][1], data[last][2]]);
             return intp;
         }
@@ -36,17 +36,17 @@
 
     function initCandleStick(data) {
         function splitData(rawData) {
-            var categoryData = [];
-            var values = [];
-            var days = []
-            for (var i = 0; i < rawData.length; i++) {
-                var dateText = rawData[i][0];
+            let categoryData = [];
+            let values = [];
+            let days = []
+            for (let i = 0; i < rawData.length; i++) {
+                let dateText = rawData[i][0];
                 days.push(new Date(dateText));
                 categoryData.push(dateText);
-                var open = rawData[i][1];
-                var close = rawData[i][2];
-                var highest = Math.max(open, close);
-                var lowest = Math.min(open, close);
+                let open = rawData[i][1];
+                let close = rawData[i][2];
+                let highest = Math.max(open, close);
+                let lowest = Math.min(open, close);
                 if (i === 0) {
                     values.push([open, close, lowest, highest]);
                 } else {
@@ -58,9 +58,19 @@
                     values[i - 1][3] = Math.max(values[i - 1][0], values[i - 1][1], values[i - 1][2], values[i - 1][3]);
                 }
             }
+            let values_fixed = [];
+            for (let i = 0; i < values.length; ++i) {
+                values_fixed.push([
+                    values[i][0].toFixed(1),
+                    values[i][1].toFixed(1),
+                    values[i][2].toFixed(1),
+                    values[i][3].toFixed(1)
+                ]);
+            }
             return {
                 categoryData: categoryData,
                 values: values,
+                values_fixed: values_fixed,
                 days: days
             };
         }
@@ -70,23 +80,23 @@
         }
 
         function calculateDaily() {
-            var result = [];
-            for (var i = 0, len = data0.values.length; i < len; i++) {
-                result.push(daily(i).toFixed(2));
+            let result = [];
+            for (let i = 0, len = data0.values.length; i < len; i++) {
+                result.push(daily(i).toFixed(1));
             }
             return result;
         }
 
         function calculateMA(dayCount) {
-            var result = [];
-            var margin = (dayCount / 2).toFixed(0) * 86400 * 1000;
-            for (var i = 0, len = data0.values.length; i < len; i++) {
-                var current = data0.days[i].getTime();
-                var left = current - margin;
-                var right = current + margin;
-                var cnt = 1;
-                var sum = daily(i);
-                for (var j = i - 1; j >= 0; --j) {
+            let result = [];
+            let margin = (dayCount / 2).toFixed(0) * 86400 * 1000;
+            for (let i = 0, len = data0.values.length; i < len; i++) {
+                let current = data0.days[i].getTime();
+                let left = current - margin;
+                let right = current + margin;
+                let cnt = 1;
+                let sum = daily(i);
+                for (let j = i - 1; j >= 0; --j) {
                     if (data0.days[j].getTime() > left) {
                         sum += daily(j);
                         ++cnt;
@@ -94,7 +104,7 @@
                         break;
                     }
                 }
-                for (var j = i + 1; j < len; ++j) {
+                for (let j = i + 1; j < len; ++j) {
                     if (data0.days[j].getTime() < right) {
                         sum += daily(j);
                         ++cnt;
@@ -102,19 +112,19 @@
                         break;
                     }
                 }
-                result.push((sum / cnt).toFixed(2));
+                result.push((sum / cnt).toFixed(1));
             }
             return result;
         }
 
-        var upColor = '#ec0000';
-        var upBorderColor = '#8A0000';
-        var downColor = '#00da3c';
-        var downBorderColor = '#008F28';
+        let upColor = '#ec0000';
+        let upBorderColor = '#8A0000';
+        let downColor = '#00da3c';
+        let downBorderColor = '#008F28';
 
-        var data0 = splitData(data);
+        let data0 = splitData(data);
 
-        var option = {
+        let option = {
             title: {
                 text: '',
                 left: 0
@@ -173,7 +183,7 @@
                 {
                     name: '日K',
                     type: 'candlestick',
-                    data: data0.values,
+                    data: data0.values_fixed,
                     itemStyle: {
                         normal: {
                             color: upColor,
@@ -299,21 +309,21 @@
     }
 
     function initHeatMap(rawData) {
-        var begin;
-        var end;
-        var absdiffmax;
+        let begin;
+        let end;
+        let absDiffMax;
 
         function process(rawData) {
-            var data = [];
-            for (var i = 0; i < rawData.length; ++i) {
-                var diff = 0;
+            let data = [];
+            for (let i = 0; i < rawData.length; ++i) {
+                let diff = 0;
                 if (i === 0) {
                     diff = 0;
                 } else {
                     diff = Math.min(rawData[i][1], rawData[i][2]) - Math.min(rawData[i - 1][1], rawData[i - 1][2]);
                 }
                 diff = diff === 0 ? undefined : diff.toFixed(2);
-                var now = new Date(rawData[i][0]).getTime();
+                let now = new Date(rawData[i][0]).getTime();
                 data.push([
                     echarts.format.formatTime('yyyy-MM-dd', now),
                     diff
@@ -324,15 +334,15 @@
                 if (!end || now > end) {
                     end = now;
                 }
-                if (!absdiffmax || Math.abs(diff) > absdiffmax) {
-                    absdiffmax = Math.abs(diff);
+                if (!absDiffMax || Math.abs(diff) > absDiffMax) {
+                    absDiffMax = Math.abs(diff);
                 }
             }
             return data;
         }
 
-        var data = process(rawData);
-        var option = {
+        let data = process(rawData);
+        let option = {
             title: {
                 top: 30,
                 left: 'center',
@@ -341,7 +351,7 @@
             tooltip: {},
             visualMap: {
                 show: false,
-                min: -absdiffmax,
+                min: -absDiffMax,
                 max: 0,
                 type: 'piecewise',
                 orient: 'horizontal',
@@ -418,4 +428,4 @@
             initHeatMap(data);
         })
     })
-})();
+})(echarts);
