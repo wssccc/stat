@@ -7,20 +7,36 @@
         function interpolation(data) {
             let intp = [];
             for (let i = 0; i < data.length; ++i) {
-                data[i][0] = new Date(data[i][0]);
-                if (data[i].length === 2) {
-                    data[i].push(data[i][1]);
+                let strs = [];
+                let vals = [];
+                let datai = data[i];
+                for (let j = 0; j < datai.length; ++j) {
+                    switch (typeof datai[j]) {
+                        case "string":
+                            strs.push(datai[j]);
+                            break;
+                        case "number":
+                            vals.push(datai[j]);
+                            break;
+                    }
                 }
+                while (strs.length < 2) {
+                    strs.push(undefined);
+                }
+                while (vals.length < 2) {
+                    vals.push(vals[vals.length - 1]);
+                }
+                data[i] = [new Date(strs[0]), strs[1], vals[0], vals[1]];
             }
             for (let i = 0; i < data.length - 1; ++i) {
                 let next = data[i + 1][0].getTime();
                 let cur = data[i][0].getTime();
                 for (let k = cur; k < next; k += 86400 * 1000) {
-                    intp.push([dateFormat(new Date(k)), data[i][1], data[i][2]]);
+                    intp.push([dateFormat(new Date(k)), (k === cur ? data[i][1] : undefined), data[i][2], data[i][3]]);
                 }
             }
             let last = data.length - 1;
-            intp.push([dateFormat(data[last][0]), data[last][1], data[last][2]]);
+            intp.push([dateFormat(data[last][0]), data[last][1], data[last][2], data[last][3]]);
             return intp;
         }
 
@@ -36,6 +52,7 @@
 
     function initCandleStick(data) {
         function splitData(rawData) {
+            let markPoints = [];
             let categoryData = [];
             let values = [];
             let days = []
@@ -43,8 +60,8 @@
                 let dateText = rawData[i][0];
                 days.push(new Date(dateText));
                 categoryData.push(dateText);
-                let open = rawData[i][1];
-                let close = rawData[i][2];
+                let open = rawData[i][2];
+                let close = rawData[i][3];
                 let highest = Math.max(open, close);
                 let lowest = Math.min(open, close);
                 if (i === 0) {
@@ -56,6 +73,17 @@
                     values[i - 1][1] = open;
                     values[i - 1][2] = Math.min(values[i - 1][0], values[i - 1][1], values[i - 1][2], values[i - 1][3]);
                     values[i - 1][3] = Math.max(values[i - 1][0], values[i - 1][1], values[i - 1][2], values[i - 1][3]);
+                }
+                let msg = rawData[i][1];
+                if (msg) {
+                    markPoints.push({
+                        name: msg,
+                        coord: [dateText, close],
+                        value: close,
+                        itemStyle: {
+                            normal: {color: 'rgb(41,60,85)'}
+                        }
+                    });
                 }
             }
             let values_fixed = [];
@@ -71,7 +99,8 @@
                 categoryData: categoryData,
                 values: values,
                 values_fixed: values_fixed,
-                days: days
+                days: days,
+                markPoints: markPoints
             };
         }
 
@@ -196,42 +225,27 @@
                         label: {
                             normal: {
                                 formatter: function (param) {
-                                    return param != null ? Math.round(param.value) : '';
+                                    return param.name + "\n" + Math.round(param.value);
                                 }
                             }
                         },
-                        data: [
-                            /*
+                        data: data0.markPoints.concat([
                             {
-                                name: 'XX标点',
-                                coord: ['2013/5/31', 2300],
-                                value: 2300,
-                                itemStyle: {
-                                    normal: {color: 'rgb(41,60,85)'}
-                                }
-                            },
-                            */
-                            {
-                                name: 'highest value',
+                                name: 'Max',
                                 type: 'max',
                                 valueDim: 'highest'
                             },
                             {
-                                name: 'lowest value',
+                                name: 'Min',
                                 type: 'min',
                                 valueDim: 'lowest'
                             },
                             {
-                                name: 'average value on close',
+                                name: 'Avg',
                                 type: 'average',
                                 valueDim: 'close'
                             }
-                        ],
-                        tooltip: {
-                            formatter: function (param) {
-                                return param.name + '<br>' + (param.data.coord || '');
-                            }
-                        }
+                        ])
                     },
                     markLine: {
                         symbol: ['none', 'none'],
@@ -320,7 +334,7 @@
                 if (i === 0) {
                     diff = 0;
                 } else {
-                    diff = Math.min(rawData[i][1], rawData[i][2]) - Math.min(rawData[i - 1][1], rawData[i - 1][2]);
+                    diff = Math.min(rawData[i][2], rawData[i][3]) - Math.min(rawData[i - 1][2], rawData[i - 1][3]);
                 }
                 diff = diff === 0 ? undefined : diff.toFixed(2);
                 let now = new Date(rawData[i][0]).getTime();
