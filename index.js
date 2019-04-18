@@ -9,7 +9,7 @@
             let result = [];
             data = data.map((item) => {
                 let strs = item.filter(v => typeof v === 'string');
-                let vals = item.filter(v => typeof  v === 'number');
+                let vals = item.filter(v => typeof v === 'number');
                 while (strs.length < 2) {
                     strs.push(undefined);
                 }
@@ -326,10 +326,10 @@
             let data = [];
             for (let i = 0; i < rawData.length; ++i) {
                 let diff = 0;
-                if (i === 0) {
+                if (i === rawData.length - 1) {
                     diff = 0;
                 } else {
-                    diff = Math.min(rawData[i][3], rawData[i][4]) - Math.min(rawData[i - 1][3], rawData[i - 1][4]);
+                    diff = Math.min(rawData[i + 1][3], rawData[i + 1][4]) - Math.min(rawData[i][3], rawData[i][4]);
                 }
                 diff = diff === 0 ? undefined : diff.toFixed(2);
                 let now = new Date(rawData[i][0]).getTime();
