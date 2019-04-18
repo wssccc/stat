@@ -18,14 +18,24 @@
                 }
                 return [new Date(strs[0]).getTime(), strs[1], vals[0], vals[1]];
             })
-            for (let i = 0; i < data.length - 1; ++i) {
-                let next = data[i + 1][0];
-                let cur = data[i][0];
-                for (let k = cur; k < next; k += 86400 * 1000) {
-                    result.push([dateFormat(new Date(k)), k, (k === cur ? data[i][1] : undefined), data[i][2], data[i][3]]);
+            let pre = null;
+            data.forEach(item => {
+                if (pre) {
+                    let right = item[0];
+                    let left = pre[0];
+                    for (let k = left; k < right; k += 86400 * 1000) {
+                        result.push([
+                            dateFormat(new Date(k)),
+                            k,
+                            (k === left ? pre[1] : undefined),
+                            pre[2],
+                            pre[3]
+                        ]);
+                    }
                 }
-            }
-            let last = data.length - 1;
+                pre = item;
+            })
+            const last = data.length - 1;
             result.push([dateFormat(new Date(data[last][0])), data[last][0], data[last][1], data[last][2], data[last][3]]);
             //init progress
             let progress = parseFloat(((80 - data[last][2]) / 15 * 100).toFixed(1));
@@ -77,15 +87,9 @@
                     });
                 }
             }
-            let values_fixed = [];
-            for (let i = 0; i < values.length; ++i) {
-                values_fixed.push([
-                    values[i][0].toFixed(1),
-                    values[i][1].toFixed(1),
-                    values[i][2].toFixed(1),
-                    values[i][3].toFixed(1)
-                ]);
-            }
+            let values_fixed = values.map(item => {
+                return item.map(v => v.toFixed(1));
+            });
             return {
                 categoryData: categoryData,
                 values: values,
@@ -401,7 +405,7 @@
                 data: data,
                 tooltip: {
                     formatter: function (d) {
-                        return d.value[0] + '<br/><span class="tip-arrow glyphicon glyphicon-arrow-' + (d.value[1] > 0 ? 'up' : 'down') + '" aria-hidden="true"></span> ' + Math.abs(d.value[1]) + 'kg';
+                        return `${d.value[0]}<br/><span class="tip-arrow glyphicon glyphicon-arrow-${d.value[1] > 0 ? 'up' : 'down'}" aria-hidden="true"></span>${Math.abs(d.value[1])}kg`;
                     },
                     textStyle: {
                         fontWeight: 'bold'
