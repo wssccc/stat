@@ -37,6 +37,14 @@
             }
             let last = data.length - 1;
             intp.push([dateFormat(data[last][0]), data[last][1], data[last][2], data[last][3]]);
+            //init progress
+            let progress = parseFloat(((80 - data[last][2]) / 15 * 100).toFixed(1));
+            setTimeout(function () {
+                $('#progress')
+                    .attr('aria-valuenow', progress)
+                    .css('width', progress + '%')
+                    .text(progress + '%');
+            }, 0);
             return intp;
         }
 
@@ -434,7 +442,6 @@
             }
         })
     }
-
     //
     $(function () {
         load(function (data) {
