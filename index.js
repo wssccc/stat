@@ -1,62 +1,47 @@
+"use strict";
 (function (echarts) {
     function load(callback) {
-        function dateFormat(date) {
-            return date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
+        const dateFormat = (date) => {
+            return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
         }
 
         function interpolation(data) {
-            let intp = [];
-            for (let i = 0; i < data.length; ++i) {
-                let strs = [];
-                let vals = [];
-                let datai = data[i];
-                for (let j = 0; j < datai.length; ++j) {
-                    switch (typeof datai[j]) {
-                        case "string":
-                            strs.push(datai[j]);
-                            break;
-                        case "number":
-                            vals.push(datai[j]);
-                            break;
-                    }
-                }
+            let result = [];
+            data = data.map((item) => {
+                let strs = item.filter(v => typeof v === 'string');
+                let vals = item.filter(v => typeof  v === 'number');
                 while (strs.length < 2) {
                     strs.push(undefined);
                 }
                 while (vals.length < 2) {
                     vals.push(vals[vals.length - 1]);
                 }
-                data[i] = [new Date(strs[0]), strs[1], vals[0], vals[1]];
-            }
+                return [new Date(strs[0]).getTime(), strs[1], vals[0], vals[1]];
+            })
             for (let i = 0; i < data.length - 1; ++i) {
-                let next = data[i + 1][0].getTime();
-                let cur = data[i][0].getTime();
+                let next = data[i + 1][0];
+                let cur = data[i][0];
                 for (let k = cur; k < next; k += 86400 * 1000) {
-                    intp.push([dateFormat(new Date(k)), (k === cur ? data[i][1] : undefined), data[i][2], data[i][3]]);
+                    result.push([dateFormat(new Date(k)), k, (k === cur ? data[i][1] : undefined), data[i][2], data[i][3]]);
                 }
             }
             let last = data.length - 1;
-            intp.push([dateFormat(data[last][0]), data[last][1], data[last][2], data[last][3]]);
+            result.push([dateFormat(new Date(data[last][0])), data[last][0], data[last][1], data[last][2], data[last][3]]);
             //init progress
             let progress = parseFloat(((80 - data[last][2]) / 15 * 100).toFixed(1));
             $('#progress-container').fadeIn();
-            setTimeout(function () {
+            setTimeout(() => {
                 $('#progress')
                     .attr('aria-valuenow', progress)
                     .css('width', progress + '%')
                     .text(progress + '%');
             }, 0);
-            return intp;
+            return result;
         }
 
-        $.ajax({
-            url: 'data.json?_=' + Math.random(),
-            type: "GET",
-            dataType: "JSON",
-            success: function (data) {
-                callback(interpolation(data));
-            }
-        })
+        fetch('data.json?_=' + Math.random()).then(res => res.json()).then(data => {
+            callback(interpolation(data));
+        });
     }
 
     function initCandleStick(data) {
@@ -66,11 +51,9 @@
             let values = [];
             let days = []
             for (let i = 0; i < rawData.length; i++) {
-                let dateText = rawData[i][0];
-                days.push(new Date(dateText));
+                const [dateText, ts, msg, open, close] = rawData[i];
+                days.push(ts);
                 categoryData.push(dateText);
-                let open = rawData[i][2];
-                let close = rawData[i][3];
                 let highest = Math.max(open, close);
                 let lowest = Math.min(open, close);
                 if (i === 0) {
@@ -83,7 +66,6 @@
                     values[i - 1][2] = Math.min(values[i - 1][0], values[i - 1][1], values[i - 1][2], values[i - 1][3]);
                     values[i - 1][3] = Math.max(values[i - 1][0], values[i - 1][1], values[i - 1][2], values[i - 1][3]);
                 }
-                let msg = rawData[i][1];
                 if (msg) {
                     markPoints.push({
                         name: msg,
@@ -129,13 +111,13 @@
             let result = [];
             let margin = (dayCount / 2).toFixed(0) * 86400 * 1000;
             for (let i = 0, len = data0.values.length; i < len; i++) {
-                let current = data0.days[i].getTime();
+                let current = data0.days[i];
                 let left = current - margin;
                 let right = current + margin;
                 let cnt = 1;
                 let sum = daily(i);
                 for (let j = i - 1; j >= 0; --j) {
-                    if (data0.days[j].getTime() > left) {
+                    if (data0.days[j] > left) {
                         sum += daily(j);
                         ++cnt;
                     } else {
@@ -143,7 +125,7 @@
                     }
                 }
                 for (let j = i + 1; j < len; ++j) {
-                    if (data0.days[j].getTime() < right) {
+                    if (data0.days[j] < right) {
                         sum += daily(j);
                         ++cnt;
                     } else {
@@ -343,7 +325,7 @@
                 if (i === 0) {
                     diff = 0;
                 } else {
-                    diff = Math.min(rawData[i][2], rawData[i][3]) - Math.min(rawData[i - 1][2], rawData[i - 1][3]);
+                    diff = Math.min(rawData[i][3], rawData[i][4]) - Math.min(rawData[i - 1][3], rawData[i - 1][4]);
                 }
                 diff = diff === 0 ? undefined : diff.toFixed(2);
                 let now = new Date(rawData[i][0]).getTime();
