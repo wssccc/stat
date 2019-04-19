@@ -1,0 +1,49 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+#heat-map {
+  height: 180px;
+}
+
+#chart {
+  height: 450px;
+}
+
+#hitokoto-author {
+  text-align: right;
+}
+
+#hitokoto-author:before {
+  content: '—— ';
+}
+
+.profile {
+  text-align: center;
+  border-bottom: 1px solid #e5e5e5;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+}
+
+.profile-avatar {
+  border-radius: 50%;
+  border: 1px solid
+}
+
+.profile-name {
+  font-size: 23px;
+}
+
+.tip-arrow {
+  /*text-shadow: -1px -1px 0px #FFFFFF, -1px 0px 0px #FFFFFF, -1px 1px 0px #FFFFFF, 0px -1px 0px #FFFFFF, 0px 1px 0px #FFFFFF, 1px -1px 0px #FFFFFF, 1px 0px 0px #FFFFFF, 1px 1px 0px #FFFFFF;*/
+}
+
+.tip-arrow.glyphicon-arrow-up {
+  color: #ec0000
+}
+
+.tip-arrow.glyphicon-arrow-down {
+  color: #00da3c
+}
+
