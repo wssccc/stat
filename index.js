@@ -160,7 +160,7 @@
                 }
             },
             legend: {
-                data: ["MA5", "MA10"]
+                data: ["Kline", "Daily", "MA5", "MA10"]
             },
             grid: {
                 left: '3',
@@ -205,7 +205,7 @@
             ],
             series: [
                 {
-                    name: 'K',
+                    name: 'Kline',
                     type: 'candlestick',
                     data: data0.values_fixed,
                     itemStyle: {
@@ -282,7 +282,7 @@
                     }
                 },
                 {
-                    name: 'Avg',
+                    name: 'Daily',
                     type: 'line',
                     data: calculateDaily(),
                     smooth: true,
