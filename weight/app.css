@@ -18,6 +18,11 @@ body {
   content: '—— ';
 }
 
+#progress {
+  animation-direction: reverse;
+  animation-duration: 1s;
+}
+
 .profile {
   text-align: center;
   border-bottom: 1px solid #e5e5e5;
