@@ -24,7 +24,7 @@ module.exports = (env, argv) => {
       hot: true
     },
     entry: {
-      app: sourceDirectory + '/app.js'
+      app: sourceDirectory + '/app.ts'
     },
     plugins: [
       new CleanWebpackPlugin({
@@ -48,6 +48,11 @@ module.exports = (env, argv) => {
     ],
     module: {
       rules: [
+        {
+          test: /\.tsx?$/,
+          use: ['ts-loader', "eslint-loader"],
+          exclude: /node_modules/
+        },
         {
           test: /\.css$/,
           use: [
@@ -80,6 +85,9 @@ module.exports = (env, argv) => {
           include: sourceDirectory
         },
       ]
+    },
+    resolve: {
+      extensions: ['.tsx', '.ts', '.js', '.json']
     },
     output: {
       filename: 'app.js',

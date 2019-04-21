@@ -7,15 +7,18 @@ const downBorderColor = '#008F28';
 
 export class Kline {
 
-  constructor(data) {
-    this.data0 = this.splitData(data);
+  categoryData: string[] = [];
+  values: number[][] = [];
+  values_fixed: string[][] = [];
+  days: number[] = [];
+  markPoints: any[] = [];
+
+  constructor(data: Item[]) {
+    this.splitData(data);
   }
 
-  splitData(rawData) {
-    let markPoints = [];
-    let categoryData = [];
-    let values = [];
-    let days = []
+  splitData(rawData: Item[]) {
+    let {markPoints, categoryData, values, days} = this;
     for (let i = 0; i < rawData.length; i++) {
       const [dateText, ts, msg, open, close] = rawData[i];
       days.push(ts);
@@ -43,41 +46,34 @@ export class Kline {
         });
       }
     }
-    let values_fixed = values.map(item => {
+    this.values_fixed = values.map(item => {
       return item.map(v => v.toFixed(1));
     });
-    return {
-      categoryData: categoryData,
-      values: values,
-      values_fixed: values_fixed,
-      days: days,
-      markPoints: markPoints
-    };
   }
 
-  daily(i) {
-    return (this.data0.values[i][0] + this.data0.values[i][1]) / 2;
+  daily(i: number) {
+    return (this.values[i][0] + this.values[i][1]) / 2;
   }
 
   calculateDaily() {
     let result = [];
-    for (let i = 0, len = this.data0.values.length; i < len; i++) {
+    for (let i = 0, len = this.values.length; i < len; i++) {
       result.push(this.daily(i).toFixed(1));
     }
     return result;
   }
 
-  calculateMA(dayCount) {
+  calculateMA(dayCount: number) {
     let result = [];
-    let margin = (dayCount / 2).toFixed(0) * 86400 * 1000;
-    for (let i = 0, len = this.data0.values.length; i < len; i++) {
-      let current = this.data0.days[i];
+    let margin = parseFloat((dayCount / 2).toFixed(0)) * 86400 * 1000;
+    for (let i = 0, len = this.values.length; i < len; i++) {
+      let current = this.days[i];
       let left = current - margin;
       let right = current + margin;
       let cnt = 1;
       let sum = this.daily(i);
       for (let j = i - 1; j >= 0; --j) {
-        if (this.data0.days[j] > left) {
+        if (this.days[j] > left) {
           sum += this.daily(j);
           ++cnt;
         } else {
@@ -85,7 +81,7 @@ export class Kline {
         }
       }
       for (let j = i + 1; j < len; ++j) {
-        if (this.data0.days[j] < right) {
+        if (this.days[j] < right) {
           sum += this.daily(j);
           ++cnt;
         } else {
@@ -97,7 +93,7 @@ export class Kline {
     return result;
   }
 
-  init(elem) {
+  init(elem: HTMLElement) {
     echarts.init(elem).setOption({
       title: {
         text: '',
@@ -120,7 +116,7 @@ export class Kline {
       },
       xAxis: {
         type: 'category',
-        data: this.data0.categoryData,
+        data: this.categoryData,
         scale: true,
         boundaryGap: false,
         axisLine: {onZero: false},
@@ -157,7 +153,7 @@ export class Kline {
         {
           name: 'Kline',
           type: 'candlestick',
-          data: this.data0.values_fixed,
+          data: this.values_fixed,
           itemStyle: {
             normal: {
               color: upColor,
@@ -169,12 +165,12 @@ export class Kline {
           markPoint: {
             label: {
               normal: {
-                formatter: function (param) {
+                formatter: function (param: any) {
                   return param.name + "\n" + Math.round(param.value);
                 }
               }
             },
-            data: this.data0.markPoints.concat([
+            data: this.markPoints.concat([
               {
                 name: 'Max',
                 type: 'max',

@@ -9,5 +9,5 @@ $(function () {
   load(function (data) {
     new Kline(data).init($("#chart")[0]);
     new Heatmap(data).init($("#heat-map")[0])
-  })
-})
+  });
+});

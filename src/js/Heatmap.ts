@@ -1,20 +1,29 @@
 import {echarts} from './global'
 
+
+type HeatMapDataItem = [string, number];
+
 export class Heatmap {
-  constructor(data) {
+
+  data: HeatMapDataItem[];
+  begin: number;
+  end: number;
+  absDiffMax: number;
+
+  constructor(data: Item[]) {
     this.data = this.process(data);
   }
 
-  process(rawData) {
-    let data = [];
+  process(rawData: Item[]) {
+    let data: HeatMapDataItem[] = [];
     for (let i = 0; i < rawData.length; ++i) {
-      let diff = 0;
+      let diff: number = 0;
       if (i === rawData.length - 1) {
         diff = 0;
       } else {
         diff = Math.min(rawData[i + 1][3], rawData[i + 1][4]) - Math.min(rawData[i][3], rawData[i][4]);
       }
-      diff = diff === 0 ? undefined : diff.toFixed(2);
+      diff = diff === 0 ? undefined : parseFloat(diff.toFixed(2));
       let now = new Date(rawData[i][0]).getTime();
       data.push([
         echarts.format.formatTime('yyyy-MM-dd', now),
@@ -33,7 +42,7 @@ export class Heatmap {
     return data;
   }
 
-  init(elem) {
+  init(elem: HTMLElement) {
     echarts.init(elem).setOption({
       title: {
         top: 30,
@@ -87,7 +96,7 @@ export class Heatmap {
         coordinateSystem: 'calendar',
         data: this.data,
         tooltip: {
-          formatter: function (d) {
+          formatter: function (d: any) {
             return `${d.value[0]}<br/><span class="tip-arrow glyphicon glyphicon-arrow-${d.value[1] > 0 ? 'up' : 'down'}" aria-hidden="true"></span>${Math.abs(d.value[1])}kg`;
           },
           textStyle: {

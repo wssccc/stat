@@ -1,12 +1,12 @@
 import {$, env} from './global'
-import staticdata from '../../data'
+import staticdata from '../../data.json'
 
-export function dateFormat(date) {
+export function dateFormat(date: Date) {
   return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
 }
 
-export function interpolation(data) {
-  let result = [];
+export function interpolation(data: any[][]): Item[] {
+  let result: Item[] = [];
   data = data.map((item) => {
     let strs = item.filter(v => typeof v === 'string');
     let vals = item.filter(v => typeof v === 'number');
@@ -17,8 +17,8 @@ export function interpolation(data) {
       vals.push(vals[vals.length - 1]);
     }
     return [new Date(strs[0]).getTime(), strs[1], vals[0], vals[1]];
-  })
-  let pre = null;
+  });
+  let pre: any[] = null;
   data.forEach(item => {
     if (pre) {
       let right = item[0];
@@ -34,7 +34,7 @@ export function interpolation(data) {
       }
     }
     pre = item;
-  })
+  });
   const last = data.length - 1;
   result.push([dateFormat(new Date(data[last][0])), data[last][0], data[last][1], data[last][2], data[last][3]]);
   //init progress
@@ -49,7 +49,11 @@ export function interpolation(data) {
   return result;
 }
 
-export function load(callback) {
+interface LoadCallback {
+  (items: Item[]): void
+}
+
+export function load(callback: LoadCallback) {
   if (env === 'development') {
     callback(interpolation(staticdata));
   } else {
