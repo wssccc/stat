@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "build": "webpack --inline --progress --config=./build/webpack.config.js --mode=production",
-    "dev": "webpack-dev-server --open --inline --progress --config=./build/webpack.config.js --mode=development"
+    "dev": "webpack-dev-server --color --open --inline --progress --config=./build/webpack.config.js --mode=development"
   },
   "keywords": [],
   "author": "",
