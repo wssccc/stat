@@ -1,39 +1,62 @@
-import {echarts} from './global'
+<template>
+  <div class="row" :if="store.state.data">
+    <div ref="kline" class="kline">
+      <p style="text-align: center"><img src="@/assets/loading.gif"/></p>
+    </div>
+  </div>
+</template>
 
-const upColor = '#ec0000';
-const upBorderColor = '#8A0000';
-const downColor = '#00da3c';
-const downBorderColor = '#008F28';
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+import { echarts } from '@/global'
+import { store } from '../store'
 
-export class Kline {
+@Component
+export default class KLine extends Vue {
+  store = store
 
-  categoryData: string[] = [];
-  values: number[][] = [];
-  values_fixed: string[][] = [];
-  days: number[] = [];
-  markPoints: any[] = [];
-
-  constructor(data: Item[]) {
-    this.splitData(data);
+  beforeUpdate () {
+    console.log('store updated')
   }
 
-  splitData(rawData: Item[]) {
-    let {markPoints, categoryData, values, days} = this;
+  updated () {
+    store.state.data && new Kline(store.state.data).init(this.$refs.kline as HTMLElement)
+  }
+}
+
+const upColor = '#ec0000'
+const upBorderColor = '#8A0000'
+const downColor = '#00da3c'
+const downBorderColor = '#008F28'
+
+class Kline {
+  categoryData: string[] = []
+  values: number[][] = []
+  valuesFixed: string[][] = []
+  days: number[] = []
+  markPoints: any[] = []
+
+  constructor (data: Item[]) {
+    this.splitData(data)
+  }
+
+  splitData (rawData: Item[]) {
+    let { markPoints, categoryData, values, days } = this
     for (let i = 0; i < rawData.length; i++) {
-      const [dateText, ts, msg, open, close] = rawData[i];
-      days.push(ts);
-      categoryData.push(dateText);
-      let highest = Math.max(open, close);
-      let lowest = Math.min(open, close);
+      const [dateText, ts, msg, open, close] = rawData[i]
+      days.push(ts)
+      categoryData.push(dateText)
+      let highest = Math.max(open, close)
+      let lowest = Math.min(open, close)
       if (i === 0) {
-        values.push([open, close, lowest, highest]);
+        values.push([open, close, lowest, highest])
       } else {
-        //close value will be updated
-        values.push([open, open, lowest, highest]);
-        //do update previous close
-        values[i - 1][1] = open;
-        values[i - 1][2] = Math.min(values[i - 1][0], values[i - 1][1], values[i - 1][2], values[i - 1][3]);
-        values[i - 1][3] = Math.max(values[i - 1][0], values[i - 1][1], values[i - 1][2], values[i - 1][3]);
+        // close value will be updated
+        values.push([open, open, lowest, highest])
+        // do update previous close
+        values[i - 1][1] = open
+        values[i - 1][2] = Math.min(values[i - 1][0], values[i - 1][1], values[i - 1][2], values[i - 1][3])
+        values[i - 1][3] = Math.max(values[i - 1][0], values[i - 1][1], values[i - 1][2], values[i - 1][3])
       }
       if (msg) {
         markPoints.push({
@@ -41,59 +64,59 @@ export class Kline {
           coord: [dateText, close],
           value: close,
           itemStyle: {
-            normal: {color: 'rgb(41,60,85)'}
+            normal: { color: 'rgb(41,60,85)' }
           }
-        });
+        })
       }
     }
-    this.values_fixed = values.map(item => {
-      return item.map(v => v.toFixed(1));
-    });
+    this.valuesFixed = values.map(item => {
+      return item.map(v => v.toFixed(1))
+    })
   }
 
-  daily(i: number) {
-    return (this.values[i][0] + this.values[i][1]) / 2;
+  daily (i: number) {
+    return (this.values[i][0] + this.values[i][1]) / 2
   }
 
-  calculateDaily() {
-    let result = [];
+  calculateDaily () {
+    let result = []
     for (let i = 0, len = this.values.length; i < len; i++) {
-      result.push(this.daily(i).toFixed(1));
+      result.push(this.daily(i).toFixed(1))
     }
-    return result;
+    return result
   }
 
-  calculateMA(dayCount: number) {
-    let result = [];
-    let margin = parseFloat((dayCount / 2).toFixed(0)) * 86400 * 1000;
+  calculateMA (dayCount: number) {
+    let result = []
+    let margin = parseFloat((dayCount / 2).toFixed(0)) * 86400 * 1000
     for (let i = 0, len = this.values.length; i < len; i++) {
-      let current = this.days[i];
-      let left = current - margin;
-      let right = current + margin;
-      let cnt = 1;
-      let sum = this.daily(i);
+      let current = this.days[i]
+      let left = current - margin
+      let right = current + margin
+      let cnt = 1
+      let sum = this.daily(i)
       for (let j = i - 1; j >= 0; --j) {
         if (this.days[j] > left) {
-          sum += this.daily(j);
-          ++cnt;
+          sum += this.daily(j)
+          ++cnt
         } else {
-          break;
+          break
         }
       }
       for (let j = i + 1; j < len; ++j) {
         if (this.days[j] < right) {
-          sum += this.daily(j);
-          ++cnt;
+          sum += this.daily(j)
+          ++cnt
         } else {
-          break;
+          break
         }
       }
-      result.push((sum / cnt).toFixed(1));
+      result.push((sum / cnt).toFixed(1))
     }
-    return result;
+    return result
   }
 
-  init(elem: HTMLElement) {
+  init (elem: HTMLElement) {
     echarts.init(elem).setOption({
       title: {
         text: '',
@@ -106,7 +129,7 @@ export class Kline {
         }
       },
       legend: {
-        data: ["Kline", "Daily", "MA5", "MA10"]
+        data: ['Kline', 'Daily', 'MA5', 'MA10']
       },
       grid: {
         left: '3',
@@ -119,8 +142,8 @@ export class Kline {
         data: this.categoryData,
         scale: true,
         boundaryGap: false,
-        axisLine: {onZero: false},
-        splitLine: {show: false},
+        axisLine: { onZero: false },
+        splitLine: { show: false },
         splitNumber: 20,
         min: 'dataMin',
         max: 'dataMax'
@@ -133,7 +156,7 @@ export class Kline {
         axisLabel: {
           formatter: '{value}kg',
           rotate: 30
-        },
+        }
       },
       dataZoom: [
         {
@@ -153,7 +176,7 @@ export class Kline {
         {
           name: 'Kline',
           type: 'candlestick',
-          data: this.values_fixed,
+          data: this.valuesFixed,
           itemStyle: {
             normal: {
               color: upColor,
@@ -166,7 +189,7 @@ export class Kline {
             label: {
               normal: {
                 formatter: function (param: any) {
-                  return param.name + "\n" + Math.round(param.value);
+                  return param.name + '\n' + Math.round(param.value)
                 }
               }
             },
@@ -199,8 +222,8 @@ export class Kline {
                   symbol: 'circle',
                   symbolSize: 10,
                   label: {
-                    normal: {show: false},
-                    emphasis: {show: false}
+                    normal: { show: false },
+                    emphasis: { show: false }
                   }
                 },
                 {
@@ -209,8 +232,8 @@ export class Kline {
                   symbol: 'circle',
                   symbolSize: 10,
                   label: {
-                    normal: {show: false},
-                    emphasis: {show: false}
+                    normal: { show: false },
+                    emphasis: { show: false }
                   }
                 }
               ],
@@ -234,7 +257,7 @@ export class Kline {
           smooth: true,
           showSymbol: false,
           lineStyle: {
-            normal: {opacity: 0.5}
+            normal: { opacity: 0.5 }
           }
         },
         {
@@ -244,7 +267,7 @@ export class Kline {
           smooth: true,
           showSymbol: false,
           lineStyle: {
-            normal: {opacity: 0.5}
+            normal: { opacity: 0.5 }
           }
         },
         {
@@ -254,11 +277,17 @@ export class Kline {
           smooth: true,
           showSymbol: false,
           lineStyle: {
-            normal: {opacity: 0.5}
+            normal: { opacity: 0.5 }
           }
         }
       ]
-    });
+    })
   }
 }
+</script>
 
+<style scoped lang="less">
+  .kline {
+    height: 450px;
+  }
+</style>
