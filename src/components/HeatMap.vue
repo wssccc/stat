@@ -7,6 +7,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { echarts } from '@/global'
 import { store } from '../store'
 
+const weekMap = ['星期天', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
 @Component
 export default class HeatMap extends Vue {
   store = store
@@ -43,9 +44,7 @@ export class Heatmap {
       if (i === rawData.length - 1) {
         diff = 0
       } else {
-        diff =
-          Math.min(rawData[i + 1][3], rawData[i + 1][4]) -
-          Math.min(rawData[i][3], rawData[i][4])
+        diff = rawData[i + 1][3] - rawData[i][3]
       }
       diff = parseFloat(diff.toFixed(2))
       let now = new Date(rawData[i][0]).getTime()
@@ -118,7 +117,9 @@ export class Heatmap {
         data: this.data,
         tooltip: {
           formatter: function (d: any) {
-            return `${d.value[0]}<br/><span class="tip-arrow glyphicon glyphicon-arrow-${d.value[1] > 0 ? 'up' : 'down'}" aria-hidden="true"></span>${Math.abs(d.value[1])}kg`
+            let date = new Date(d.value[0])
+            let dateText = echarts.format.formatTime('yyyy/MM/dd ', new Date(d.value[0])) + weekMap[date.getDay()]
+            return `${dateText}<br/><span class="tip-arrow glyphicon glyphicon-arrow-${d.value[1] > 0 ? 'up' : 'down'}" aria-hidden="true"></span> ${Math.abs(d.value[1])}kg`
           },
           textStyle: {
             fontWeight: 'bold'
