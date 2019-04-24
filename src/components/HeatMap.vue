@@ -9,11 +9,19 @@ import { store } from '../store'
 
 @Component
 export default class HeatMap extends Vue {
-  updated () {
-    store.state.data && new Heatmap(store.state.data).init(this.$refs.heatMap as HTMLElement)
+  store = store
+
+  mounted () {
+    this.update()
   }
 
-  store = store
+  updated () {
+    this.update()
+  }
+
+  update () {
+    store.state.data && new Heatmap(store.state.data).init(this.$refs.heatMap as HTMLElement)
+  }
 }
 
 type HeatMapDataItem = [string, number | undefined]

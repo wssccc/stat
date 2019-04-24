@@ -1,5 +1,11 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <img src="../assets/afraid.jpg"/>
   </div>
 </template>
+
+<style scoped>
+  .about {
+    text-align: center;
+  }
+</style>

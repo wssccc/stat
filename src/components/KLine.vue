@@ -1,7 +1,7 @@
 <template>
   <div :if="store.state.data">
     <div ref="kline" class="kline">
-      <p style="text-align: center"><img src="@/assets/loading.gif"/></p>
+      <p style="text-align: center"><img src="../assets/loading.gif"/></p>
     </div>
   </div>
 </template>
@@ -15,7 +15,15 @@ import { store } from '../store'
 export default class KLine extends Vue {
   store = store
 
+  mounted () {
+    this.update()
+  }
+
   updated () {
+    this.update()
+  }
+
+  update () {
     store.state.data && new Kline(store.state.data).init(this.$refs.kline as HTMLElement)
   }
 }
