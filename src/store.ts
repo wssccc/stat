@@ -34,14 +34,25 @@ const interpolation = (data: any[][]): StoreState => {
           k,
           (k === left ? pre[1] : undefined),
           pre[2],
-          pre[3]
+          pre[3],
+          0
         ])
       }
     }
     pre = item
   })
   const last = data.length - 1
-  result.push([dateFormat(new Date(data[last][0])), data[last][0], data[last][1], data[last][2], data[last][3]])
+  result.push([dateFormat(new Date(data[last][0])), data[last][0], data[last][1], data[last][2], data[last][3], 0])
+  //
+  for (let i = 0; i < result.length; ++i) {
+    let diff = 0
+    if (i !== result.length - 1) {
+      diff = result[i + 1][3] - result[i][3]
+    }
+    diff = parseFloat(diff.toFixed(2))
+    result[i][5] = diff
+  }
+  //
   let progress = parseFloat(((80 - data[last][2]) / 15 * 100).toFixed(1))
   return {
     data: result,
@@ -73,10 +84,12 @@ let store = new Vuex.Store({
 })
 
 Vue.nextTick(() => {
-  load().then(res => {
-    let d = interpolation(res)
-    store.commit('update', d)
-  })
+  setTimeout(() => {
+    load().then(res => {
+      let d = interpolation(res)
+      store.commit('update', d)
+    })
+  }, 0)
 })
 
 let fields = Object.keys(state)

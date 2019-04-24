@@ -1,7 +1,9 @@
 <template>
   <div id="app" class="container">
     <div id="nav" class="row">
-      <router-link to="/weight">Weight</router-link>
+      <router-link to="/charts">Charts</router-link>
+      |
+      <router-link to="/table">Table</router-link>
       |
       <router-link to="/about">About</router-link>
     </div>

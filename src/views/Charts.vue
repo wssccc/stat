@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <div class="container">
+  <div class="container">
+    <div v-if="!isReady">
+      <p style="text-align: center"><img src="../assets/loading.gif"/></p>
+    </div>
+    <div v-else>
       <div class="row">
         <div class="col-xs-12 col-md-6 col-md-offset-3">
           <Progress/>
@@ -13,7 +16,6 @@
         <KLine/>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -25,7 +27,6 @@ import HeatMap from '@/components/HeatMap.vue'
 import KLine from '../components/KLine.vue'
 
 @Component({
-  store,
   components: {
     KLine,
     HeatMap,
@@ -33,5 +34,8 @@ import KLine from '../components/KLine.vue'
   }
 })
 export default class Weight extends Vue {
+  get isReady () {
+    return store.state.data
+  }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div :if="store.state.data" class="heat-map" ref="heatMap"></div>
+  <div v-if="isReady" class="heat-map" ref="heatMap"></div>
 </template>
 
 <script lang="ts">
@@ -8,16 +8,19 @@ import { echarts } from '@/global'
 import { store } from '../store'
 
 const weekMap = ['星期天', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
+
 @Component
 export default class HeatMap extends Vue {
-  store = store
-
   mounted () {
     this.update()
   }
 
   updated () {
     this.update()
+  }
+
+  get isReady () {
+    return store.state.data
   }
 
   update () {
@@ -40,13 +43,7 @@ export class Heatmap {
   process (rawData: Item[]) {
     let data: HeatMapDataItem[] = []
     for (let i = 0; i < rawData.length; ++i) {
-      let diff: number | undefined = 0
-      if (i === rawData.length - 1) {
-        diff = 0
-      } else {
-        diff = rawData[i + 1][3] - rawData[i][3]
-      }
-      diff = parseFloat(diff.toFixed(2))
+      let diff = rawData[i][5]
       let now = new Date(rawData[i][0]).getTime()
       data.push([echarts.format.formatTime('yyyy-MM-dd', now), diff || undefined])
       if (!this.begin || now < this.begin) {

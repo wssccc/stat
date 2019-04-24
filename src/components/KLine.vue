@@ -1,7 +1,6 @@
 <template>
-  <div :if="store.state.data">
+  <div v-if="isReady">
     <div ref="kline" class="kline">
-      <p style="text-align: center"><img src="../assets/loading.gif"/></p>
     </div>
   </div>
 </template>
@@ -13,14 +12,16 @@ import { store } from '../store'
 
 @Component
 export default class KLine extends Vue {
-  store = store
-
   mounted () {
     this.update()
   }
 
   updated () {
     this.update()
+  }
+
+  get isReady () {
+    return store.state.data
   }
 
   update () {
