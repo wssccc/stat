@@ -65,7 +65,6 @@ let store = new Vuex.Store({
   state: state,
   mutations: {
     update (state, newState: StoreState) {
-      console.log('committed')
       Object.assign(state, newState)
     }
   },
@@ -73,14 +72,11 @@ let store = new Vuex.Store({
   getters: {}
 })
 
-Vue.nextTick(function () {
-  setTimeout(() => {
-    console.log('begin load')
-    load().then(res => {
-      let d = interpolation(res)
-      store.commit('update', d)
-    })
-  }, 3000)
+Vue.nextTick(() => {
+  load().then(res => {
+    let d = interpolation(res)
+    store.commit('update', d)
+  })
 })
 
 let fields = Object.keys(state)

@@ -12,7 +12,6 @@ import { store } from '../store'
 @Component
 export default class HeatMap extends Vue {
   updated () {
-    console.log('hm updated')
     store.state.data && new Heatmap(store.state.data).init(this.$refs.heatMap as HTMLElement)
   }
 

@@ -15,10 +15,6 @@ import { store } from '../store'
 export default class KLine extends Vue {
   store = store
 
-  beforeUpdate () {
-    console.log('store updated')
-  }
-
   updated () {
     store.state.data && new Kline(store.state.data).init(this.$refs.kline as HTMLElement)
   }
