@@ -1,6 +1,7 @@
 <template>
   <div class="progress" :style="{display: progress>0? 'block':'none'}">
     <div
+      id="progress"
       class="progress-bar progress-bar-striped active"
       role="progressbar"
       aria-valuenow="0"
@@ -24,4 +25,8 @@ export default class Progress extends Vue {
 }
 </script>
 <style scoped lang="less">
+  #progress {
+    animation-direction: reverse;
+    animation-duration: 1s;
+  }
 </style>
