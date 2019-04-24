@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="container">
     <div id="nav">
       <router-link to="/weight">Weight</router-link>|
       <router-link to="/about">About</router-link>
@@ -12,6 +12,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import Profile from './components/Profile.vue'
+
 export default Vue.extend({
   components: {
     Profile
