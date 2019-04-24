@@ -1,5 +1,5 @@
 <template>
-  <div class="row profile">
+  <div class="profile">
     <img
       class="profile-avatar"
       src="https://blog.ngscript.org/avatar.jpg"
