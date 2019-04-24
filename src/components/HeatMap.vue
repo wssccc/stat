@@ -1,7 +1,5 @@
 <template>
-  <div class="container hidden-xs">
-    <div :if="store.state.data" class="heat-map" ref="heatMap"></div>
-  </div>
+  <div :if="store.state.data" class="heat-map" ref="heatMap"></div>
 </template>
 
 <script lang="ts">

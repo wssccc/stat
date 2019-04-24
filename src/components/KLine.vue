@@ -1,5 +1,5 @@
 <template>
-  <div class="row" :if="store.state.data">
+  <div :if="store.state.data">
     <div ref="kline" class="kline">
       <p style="text-align: center"><img src="@/assets/loading.gif"/></p>
     </div>
