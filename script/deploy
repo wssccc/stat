@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -x
+cd `dirname "$0"`
+cd ..
+npm run build
+git add ./app/
+git ci -m 'update dist'
+git push
+echo 'successfully deployed'
