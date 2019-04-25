@@ -33,7 +33,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { store } from '../store'
 
 @Component
-export default class Home extends Vue {
+export default class Table extends Vue {
   get records () {
     return store.state.data && [...store.state.data].reverse()
   }
