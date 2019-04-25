@@ -3,7 +3,7 @@
     <div v-if="records" class="row">
       <table class="table table-striped table-hover">
         <thead>
-        <tr>
+        <tr class="active">
           <th class="hidden-xs">#</th>
           <th><i class="fa fa-calendar fa-lg"></i></th>
           <th><i class="fa fa-sun fa-lg fa-spin"></i></th>

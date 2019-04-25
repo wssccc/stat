@@ -1,6 +1,7 @@
 <template>
   <div class="about">
-    <img src="../assets/afraid.jpg"/>
+    <h1>_(:з」∠)_</h1>
+    <!--<img src="../assets/afraid.jpg"/>-->
   </div>
 </template>
 

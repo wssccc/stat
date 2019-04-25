@@ -29,7 +29,6 @@ export default Vue.extend({
 
 <style lang="less">
   #nav {
-    text-align: center;
     padding: 10px;
     a {
       font-weight: bold;
