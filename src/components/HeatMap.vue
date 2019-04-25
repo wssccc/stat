@@ -69,8 +69,6 @@ export class Heatmap {
       tooltip: {},
       visualMap: {
         show: false,
-        min: -this.absDiffMax,
-        max: 0,
         type: 'piecewise',
         orient: 'horizontal',
         left: 'center',
@@ -78,12 +76,28 @@ export class Heatmap {
         textStyle: {
           color: '#000'
         },
-        inRange: {
-          color: ['#254e77', '#acd5f2']
-        },
-        outOfRange: {
-          color: ['red', 'red']
-        }
+        precision: 20,
+        pieces: (() => {
+          const grades = 10
+          const step = this.absDiffMax / grades
+          let pieces = []
+          const f = (min: number, max: number, op: number, from: Color, to: Color) => {
+            pieces.push({
+              min: min,
+              max: max,
+              color: `rgb(${colorGradient(from, to, op).join()})`
+            })
+          }
+          for (let i = -this.absDiffMax; i < 0; i += step) {
+            f(i, Math.min(i + step, 0), -i / this.absDiffMax, [172, 213, 242], [37, 78, 119])
+          }
+          for (let i = 0; i < this.absDiffMax; i += step) {
+            f(i, i + step, i / this.absDiffMax, [255, 150, 150], [255, 0, 0])
+          }
+          pieces.unshift({ max: -this.absDiffMax })
+          pieces.push({ min: this.absDiffMax })
+          return pieces
+        })()
       },
       calendar: {
         top: 20,
@@ -127,6 +141,17 @@ export class Heatmap {
     })
   }
 }
+
+declare type Color = [number, number, number]
+
+function colorGradient (from: Color, to: Color, factor: number) {
+  let color: Color = [0, 0, 0]
+  for (let i = 0; i < 3; i++) {
+    color[i] = Math.round((to[i] - from[i]) * factor + from[i])
+  }
+  return color
+}
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
