@@ -1,11 +1,6 @@
-declare module '*.json' {
-  const value: any
-  export default value
-}
+export declare type Item = [string, number, string, number, number, number]
 
-declare type Item = [string, number, string, number, number, number]
-
-declare interface StoreState {
+export declare interface AppState {
   data?: Item[],
   progress?: number
 }

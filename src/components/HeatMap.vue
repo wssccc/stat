@@ -6,6 +6,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { echarts } from '@/global'
 import { store } from '../store'
+import { Item } from '../typings'
 
 const weekMap = ['星期天', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
 

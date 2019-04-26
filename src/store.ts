@@ -1,16 +1,17 @@
 import Vue from 'vue'
-import Vuex from 'vuex'
+import Vuex, { Store } from 'vuex'
 import { env } from '@/global'
+import { AppState, Item } from '@/typings'
 
 Vue.use(Vuex)
 
-let staticdata = require('../data.json')
-let state: StoreState = { data: undefined, progress: 0 }
+let staticData = require('../data.json')
+let state: AppState = { data: undefined, progress: 0 }
 
 const dateFormat = (date: Date) => {
   return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
 }
-const interpolation = (data: any[][]): StoreState => {
+const interpolation = (data: any[][]): AppState => {
   let result: Item[] = []
   data = data.map((item) => {
     let strs = item.filter(v => typeof v === 'string')
@@ -63,7 +64,7 @@ const interpolation = (data: any[][]): StoreState => {
 function load () {
   return new Promise<any[][]>((resolve, reject) => {
     if (env === 'development') {
-      resolve(staticdata)
+      resolve(staticData)
     } else {
       fetch('../data.json?_=' + Math.random()).then(res => res.json()).then(data => {
         resolve(data as any[][])
@@ -72,10 +73,10 @@ function load () {
   })
 }
 
-let store = new Vuex.Store({
+let store: Store<AppState> = new Vuex.Store<AppState>({
   state: state,
   mutations: {
-    update (state, newState: StoreState) {
+    update (state, newState: AppState) {
       Object.assign(state, newState)
     }
   },

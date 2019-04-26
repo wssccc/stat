@@ -9,6 +9,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { echarts } from '@/global'
 import { store } from '../store'
+import { Item } from '../typings'
 
 @Component
 export default class KLine extends Vue {
