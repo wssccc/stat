@@ -60,10 +60,17 @@ export default class Preview extends Vue {
     // 3,35
     this.getRub().then((rub) => {
       let cur = Math.round((newVal - MIN_WEIGHT) * (32 / (MAX_WEIGHT - MIN_WEIGHT))) + 3
+      if (cur === rub.get_current_frame()) {
+        return
+      }
       rub.move_to(cur)
       let img2 = this.$refs.img2
-      img2.src = ''
-      img2.style.width = '100%'
+      if (img2.style.width !== '100%') {
+        // clear loading
+        img2.src = ''
+        // update style
+        img2.style.width = '100%'
+      }
       img2.src = rub.get_canvas().toDataURL('image/png')
     })
   }
