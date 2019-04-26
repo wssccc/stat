@@ -5,6 +5,8 @@
       |
       <router-link to="/table">Table</router-link>
       |
+      <router-link to="/preview">Preview</router-link>
+      |
       <router-link to="/about">About</router-link>
     </div>
     <div class="row">
@@ -30,9 +32,11 @@ export default Vue.extend({
 <style lang="less">
   #nav {
     padding: 10px;
+
     a {
       font-weight: bold;
       color: #2c3e50;
+
       &.router-link-exact-active {
         color: #4a8aff;
       }

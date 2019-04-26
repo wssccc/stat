@@ -6,7 +6,7 @@ import { AppState, Item } from '@/typings'
 Vue.use(Vuex)
 
 let staticData = require('../data.json')
-let state: AppState = { data: undefined, progress: 0 }
+let state: AppState = { data: undefined, progress: 0, latest: 0 }
 
 const dateFormat = (date: Date) => {
   return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
@@ -57,7 +57,8 @@ const interpolation = (data: any[][]): AppState => {
   let progress = parseFloat(((80 - data[last][2]) / 15 * 100).toFixed(1))
   return {
     data: result,
-    progress
+    progress,
+    latest: data[last][2]
   }
 }
 
