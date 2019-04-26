@@ -7,7 +7,9 @@
       <div style="padding: 20px">
         <vue-slider v-model="value" v-bind="sliderOptions" tooltip="always" tooltipFormatter="{value}kg"/>
       </div>
-      <img ref='img2' src="../assets/loading.gif"/>
+      <div>
+        <img ref='img2' src="../assets/loading.gif"/>
+      </div>
     </div>
   </div>
 </template>
@@ -59,7 +61,10 @@ export default class Preview extends Vue {
     this.getRub().then((rub) => {
       let cur = Math.round((newVal - MIN_WEIGHT) * (32 / (MAX_WEIGHT - MIN_WEIGHT))) + 3
       rub.move_to(cur)
-      this.$refs.img2.src = rub.get_canvas().toDataURL('image/png')
+      let img2 = this.$refs.img2
+      img2.src = ''
+      img2.style.width = '100%'
+      img2.src = rub.get_canvas().toDataURL('image/png')
     })
   }
 
