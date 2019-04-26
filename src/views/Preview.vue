@@ -4,11 +4,11 @@
       <img ref='img' src="../assets/wulifanfan.gif" rel:auto_play="0" rel:rubbable="1"/>
     </div>
     <div class="col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3">
-      <div style="padding: 20px">
-        <vue-slider v-model="value" v-bind="sliderOptions" tooltip="always" tooltipFormatter="{value}kg"/>
-      </div>
       <div>
         <img ref='img2' src="../assets/loading.gif"/>
+      </div>
+      <div style="padding: 20px">
+        <vue-slider v-model="value" v-bind="sliderOptions" tooltip="always" tooltipFormatter="{value}kg"/>
       </div>
     </div>
   </div>
