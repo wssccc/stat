@@ -7,7 +7,7 @@
       <div>
         <img ref='img2' src="../assets/loading.gif"/>
       </div>
-      <div style="padding: 20px">
+      <div style="margin-top: 50px">
         <vue-slider v-model="value" v-bind="sliderOptions" tooltip="always" tooltipFormatter="{value}kg"/>
       </div>
     </div>
