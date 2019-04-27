@@ -30,29 +30,40 @@ const MAX_WEIGHT = 90
   }
 })
 export default class Preview extends Vue {
-  _rub = null
-  _rubResolves = []
-  _tweenedValue = MAX_WEIGHT
-
   data () {
+    let rubResolve = null
+    let rubPromise = new Promise(
+      function (resolve, reject) {
+        rubResolve = resolve
+      }
+    )
     return {
       sliderOptions: {
         min: MIN_WEIGHT,
         max: MAX_WEIGHT,
         duration: 1,
         dotSize: 25
-      }
+      },
+      rub: {
+        promise: rubPromise,
+        resolve: rubResolve
+      },
+      _tweenedValue: MAX_WEIGHT
     }
   }
 
   get value () {
     let cur = ((!store.state.latest || store.state.latest < MIN_WEIGHT) ? MIN_WEIGHT : store.state.latest)
-    TweenLite.to(this.$data, 0.5, { _tweenedValue: cur })
+    this.getRub().then(() => {
+      TweenLite.to(this.$data, 0.5, { _tweenedValue: cur })
+    })
     return cur
   }
 
   set value (val) {
-    TweenLite.to(this.$data, 0.5, { _tweenedValue: val })
+    this.getRub().then(() => {
+      TweenLite.to(this.$data, 0.5, { _tweenedValue: val })
+    })
   }
 
   @Watch('$data._tweenedValue')
@@ -82,25 +93,12 @@ export default class Preview extends Vue {
   mounted () {
     let rub = new SuperGif({ gif: this.$refs.img })
     rub.load(() => {
-      this.$data._rub = rub
-      this.$data._rubResolves.forEach((resolve) => {
-        resolve(rub)
-      })
-      // trigger update
-      this.value = this.value
+      this.$data.rub.resolve(rub)
     })
   }
 
   getRub () {
-    if (this.$data._rub) {
-      return new Promise((resolve, reject) => {
-        resolve(this.$data._rub)
-      })
-    } else {
-      return new Promise((resolve, reject) => {
-        this.$data._rubResolves.push(resolve)
-      })
-    }
+    return this.$data.rub.promise
   }
 }
 </script>
