@@ -26,7 +26,7 @@ export default class Profile extends Vue {
   .profile {
     text-align: center;
     //border-bottom: 1px solid #e5e5e5;
-    margin-top: 30px;
+    margin-top: 10px;
     margin-bottom: 0px;
     padding-bottom: 0px;
   }

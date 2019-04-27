@@ -294,6 +294,6 @@ class Kline {
 
 <style scoped lang="less">
   .kline {
-    height: 450px;
+    height: 400px;
   }
 </style>
