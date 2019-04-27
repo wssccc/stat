@@ -30,7 +30,6 @@ const MAX_WEIGHT = 90
   }
 })
 export default class Preview extends Vue {
-  _value = 0
   _rub = null
   _rubResolves = []
   _tweenedValue = MAX_WEIGHT
@@ -47,11 +46,12 @@ export default class Preview extends Vue {
   }
 
   get value () {
-    return this.$data._value || ((!store.state.latest || store.state.latest < MIN_WEIGHT) ? MIN_WEIGHT : store.state.latest)
+    let cur = ((!store.state.latest || store.state.latest < MIN_WEIGHT) ? MIN_WEIGHT : store.state.latest)
+    TweenLite.to(this.$data, 0.5, { _tweenedValue: cur })
+    return cur
   }
 
   set value (val) {
-    this.$data._value = val
     TweenLite.to(this.$data, 0.5, { _tweenedValue: val })
   }
 
