@@ -167,14 +167,14 @@ class Kline {
       dataZoom: [
         {
           type: 'inside',
-          start: 50,
+          start: 0,
           end: 100
         },
         {
           show: true,
           type: 'slider',
           y: '90%',
-          start: 50,
+          start: 0,
           end: 100
         }
       ],

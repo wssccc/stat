@@ -5,7 +5,7 @@
       |
       <router-link to="/table">Table</router-link>
       |
-      <router-link to="/preview">Preview</router-link>
+      <router-link to="/preview">Skr</router-link>
       |
       <router-link to="/about">About</router-link>
     </div>
