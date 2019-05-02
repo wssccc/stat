@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="container">
     <div id="nav" class="row">
-      <router-link to="/charts">Charts</router-link>
+      <router-link to="/charts">Chart</router-link>
       |
       <router-link to="/table">Table</router-link>
       |
