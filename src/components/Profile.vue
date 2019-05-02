@@ -9,7 +9,7 @@
     <p>
       <a class="profile-name" href="#">@wssccc</a>
     </p>
-    <p>Time waits for no one</p>
+    <p>_(:з」∠)_</p>
   </div>
 </template>
 

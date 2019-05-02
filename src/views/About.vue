@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <h1>_(:з」∠)_</h1>
+    <h1>Time waits for no one</h1>
     <!--<img src="../assets/afraid.jpg"/>-->
   </div>
 </template>
