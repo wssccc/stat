@@ -135,7 +135,7 @@ class Kline {
         }
       },
       legend: {
-        data: ['Kline', 'Daily', 'MA5', 'MA10']
+        data: ['Kline', 'MA5', 'MA10']
       },
       grid: {
         left: '3',
