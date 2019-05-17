@@ -7,6 +7,8 @@
       |
       <router-link to="/preview">Skr</router-link>
       |
+      <router-link to="/guess">Guess</router-link>
+      |
       <router-link to="/about">About</router-link>
     </div>
     <div class="row">
@@ -15,6 +17,10 @@
     <div class="row">
       <router-view/>
     </div>
+    <hr>
+    <footer>
+      <p>&copy; wssccc 2019</p>
+    </footer>
   </div>
 </template>
 
@@ -47,5 +53,9 @@ export default Vue.extend({
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  }
+
+  footer {
+    text-align: center;
   }
 </style>

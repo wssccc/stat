@@ -3,12 +3,18 @@ import Router from 'vue-router'
 import Charts from '@/views/Charts.vue'
 import Table from '@/views/Table.vue'
 import Preview from '@/views/Preview.vue'
+import Guess from '@/views/Guess.vue'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     { path: '/', redirect: '/charts' },
+    {
+      path: '/guess',
+      name: 'guess',
+      component: Guess
+    },
     {
       path: '/charts',
       name: 'charts',

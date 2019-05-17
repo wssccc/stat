@@ -6,7 +6,7 @@ import { AppState, Item } from '@/typings'
 Vue.use(Vuex)
 
 let staticData = require('../data.json')
-let state: AppState = { data: undefined, progress: 0, latest: 0 }
+let state: AppState = { progress: 0, latest: 0 }
 
 const dateFormat = (date: Date) => {
   return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
