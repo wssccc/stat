@@ -87,7 +87,6 @@ class Game {
       }
     }
     this.theNumber = number
-    console.log(number)
     this.count = 10
   }
 }
