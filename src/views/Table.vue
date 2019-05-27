@@ -15,8 +15,8 @@
         <tr v-for="(item, index) in records" :key="index">
           <th class="hidden-xs" scope="row">{{index+1}}</th>
           <td>{{item[0]}}</td>
-          <td>{{item[3]}}</td>
-          <td class="hidden-xs">{{item[4]}}</td>
+          <td>{{item[3].toFixed(1)}}</td>
+          <td class="hidden-xs">{{item[4].toFixed(1)}}</td>
           <td :class="rowClass(item[5])">
             <span class="tip-arrow glyphicon" :class="arrowIcon(item[5])"></span>
             {{item[5]? Math.abs(item[5]).toFixed(1):'-'}}

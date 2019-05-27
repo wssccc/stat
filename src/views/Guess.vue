@@ -11,6 +11,7 @@
               <input type="text" class="form-control" ref="numberInput"
                      @keydown="$event.key ==='Enter' && guess()" placeholder="Number">
             </div>
+            <!--<button class="btn btn-primary pull-right" @click="debug">Debug</button>-->
             <button class="btn btn-danger pull-right" @click="reset">Reset</button>
             <button class="btn btn-primary pull-right" @click="guess">Guess</button>
           </div>
@@ -65,6 +66,22 @@ class Game {
     }
   }
 
+  static test (num: number, target: number) {
+    const numstr = String(target)
+    const instr = String(num)
+    let right = 0
+    let wrong = 0
+    for (let i = 0; i < numstr.length; i++) {
+      if (numstr.charAt(i) === instr.charAt(i)) {
+        ++right
+      } else {
+        if (instr.indexOf(numstr.charAt(i)) !== -1) {
+          ++wrong
+        }
+      }
+    }
+    return [right, wrong]
+  }
   reset () {
     let digits = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     let run = true
@@ -114,6 +131,28 @@ export default class Guess extends Vue {
     this.game.guess(num, (text: string) => {
       this.outputs.push(text)
     })
+  }
+
+  debug () {
+    let select = []
+    out:
+      for (let i = 1000; i < 10000; i++) {
+        for (let output of this.outputs) {
+          const match = output.match(/(\d{4}).*A(\d)B(\d)/)
+          if (match) {
+            let n = parseInt(match[1])
+            let r = parseInt(match[2])
+            let w = parseInt(match[3])
+            let [rr, ww] = Game.test(n, i)
+            if (rr !== r || ww !== w) {
+              continue out
+            }
+          }
+        }
+        select.push(i)
+      }
+    console.log(select.length)
+    console.log(select)
   }
 }
 
