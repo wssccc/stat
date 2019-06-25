@@ -1,14 +1,16 @@
 <template>
-  <div class="about wave">
-    <div class="wave-1"></div>
-    <div class="wave-2"></div>
-    <div class="wave-3"></div>
-    <div class="wave-4"></div>
-    <div class="wave-5"></div>
-    <div class="wave-6"></div>
-    <div class="wave-7"></div>
-    <div class="wave-8"></div>
-    <div class="wave-9"></div>
+  <div class="about">
+    <div class="wave">
+      <div class="wave-1"></div>
+      <div class="wave-2"></div>
+      <div class="wave-3"></div>
+      <div class="wave-4"></div>
+      <div class="wave-5"></div>
+      <div class="wave-6"></div>
+      <div class="wave-7"></div>
+      <div class="wave-8"></div>
+      <div class="wave-9"></div>
+    </div>
   </div>
 </template>
 
@@ -16,6 +18,7 @@
   .about {
     text-align: center;
     height: 500px;
+    overflow: hidden;
     width: 100%;
   }
 
@@ -72,14 +75,18 @@
     left: 50%;
     background-color: @color;
     border-radius: 43%;
-    transform: translate(-50%, 10%) rotate(0);
+    transform: translate(-50%, 10%) rotate(0) scaleX(10);
   }
 
   .wave {
+    height: 100%;
     position: relative;
     background-color: rgb(227, 227, 227);
-    overflow: hidden;
     transform: scaleX(5);
+  }
+
+  .wave > div:nth-child(even) {
+    /*display: none;*/
   }
 
   .wave-animation(@period, @delay, @name) {
@@ -96,6 +103,5 @@
     }
     animation: @name @period linear @delay infinite;
   }
-
 
 </style>
