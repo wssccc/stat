@@ -11,7 +11,7 @@
               <input type="text" class="form-control" ref="numberInput"
                      @keydown="$event.key ==='Enter' && guess()" placeholder="Number">
             </div>
-            <!--<button class="btn btn-primary pull-right" @click="debug">Debug</button>-->
+            <button class="btn btn-primary pull-right" @click="debug">Debug</button>
             <button class="btn btn-danger pull-right" @click="reset">Reset</button>
             <button class="btn btn-primary pull-right" @click="guess">Guess</button>
           </div>
@@ -82,6 +82,7 @@ class Game {
     }
     return [right, wrong]
   }
+
   reset () {
     let digits = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     let run = true
@@ -137,6 +138,9 @@ export default class Guess extends Vue {
     let select = []
     out:
       for (let i = 1000; i < 10000; i++) {
+        if ((i + '').match(/0|(\d).*\1/)) {
+          continue
+        }
         for (let output of this.outputs) {
           const match = output.match(/(\d{4}).*A(\d)B(\d)/)
           if (match) {
